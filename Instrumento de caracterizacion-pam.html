@@ -1,0 +1,2028 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Instrumento de Caracterización Tecnológica del Centro Educativo — Escuela Santa María</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            inst: {
+              navy: '#1B365D',
+              blue: '#2563EB',
+              slate: '#334155',
+              light: '#F8FAFC',
+              gold: '#B45309',
+              teal: '#0F766E'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif']
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background-color: #F1F5F9;
+      color: #1E293B;
+    }
+
+    /* Transiciones suaves para tarjetas de selección */
+    .level-card {
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .level-card:hover {
+      transform: translateY(-2px);
+    }
+
+    /* Barra de desplazamiento discreta */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #F1F5F9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94A3B8;
+    }
+
+    /* Estilos específicos de impresión formal */
+    @media print {
+      @page {
+        size: letter portrait;
+        margin: 1.4cm 1.5cm;
+      }
+      body {
+        background-color: #FFFFFF !important;
+        color: #0F172A !important;
+        font-size: 10.5pt;
+        line-height: 1.4;
+      }
+      .no-print {
+        display: none !important;
+      }
+      #print-report-container {
+        display: block !important;
+        position: static !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        box-shadow: none !important;
+        border: none !important;
+      }
+      .print-break-avoid {
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+      .print-page-break {
+        page-break-before: always;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th, td {
+        border: 1px solid #CBD5E1 !important;
+        padding: 6px 8px !important;
+        vertical-align: top;
+      }
+      th {
+        background-color: #F1F5F9 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      .badge-print {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- BARRA SUPERIOR INSTITUCIONAL -->
+  <header class="bg-[#1B365D] text-white shadow-md sticky top-0 z-30 no-print">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+      <div class="flex items-center gap-3 min-w-0">
+        <button id="mobile-menu-btn" type="button" aria-label="Abrir menú de navegación" class="lg:hidden p-2 rounded-lg text-slate-200 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white">
+          <i class="fa-solid fa-bars text-lg"></i>
+        </button>
+        <div class="w-10 h-10 rounded-lg bg-white/15 border border-white/20 flex items-center justify-center shrink-0">
+          <i class="fa-solid fa-school text-amber-300 text-lg" aria-hidden="true"></i>
+        </div>
+        <div class="min-w-0">
+          <h1 class="text-sm sm:text-base font-bold tracking-tight truncate">
+            Instrumento de Caracterización Tecnológica del Centro Educativo
+          </h1>
+          <p class="text-xs text-slate-300 truncate">
+            Escuela Primaria con servicio de Secundaria Santa María &bull; Regional 04 / Distrito 02
+          </p>
+        </div>
+      </div>
+
+      <!-- Indicador de progreso de llenado (sin calificación) -->
+      <div class="flex items-center gap-4 shrink-0">
+        <div class="hidden sm:flex flex-col items-end" aria-live="polite">
+          <div class="flex items-center gap-2 text-xs font-medium text-slate-200">
+            <span>Progreso de llenado:</span>
+            <span id="header-progress-text" class="font-bold text-amber-300">0 de 21 indicadores (0%)</span>
+          </div>
+          <div class="w-44 h-2 bg-slate-800 rounded-full overflow-hidden mt-1 border border-white/10" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="21" id="header-progress-bar-wrap">
+            <div id="header-progress-bar" class="h-full bg-emerald-400 transition-all duration-300" style="width: 0%"></div>
+          </div>
+        </div>
+
+        <button type="button" onclick="saveCurrentRecord(false)" class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs sm:text-sm font-semibold px-3.5 py-2 rounded-lg shadow transition focus:outline-none focus:ring-2 focus:ring-emerald-300">
+          <i class="fa-solid fa-floppy-disk"></i>
+          <span>Guardar</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Barra progreso móvil -->
+    <div class="sm:hidden bg-[#142947] px-4 py-1.5 border-t border-white/10 flex items-center justify-between text-xs">
+      <span class="text-slate-300">Indicadores valorados:</span>
+      <span id="mobile-progress-text" class="font-bold text-amber-300">0 / 21 (0%)</span>
+    </div>
+  </header>
+
+  <!-- CONTENEDOR PRINCIPAL CON MENÚ LATERAL Y ÁREA DE TRABAJO -->
+  <div class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col lg:flex-row gap-6 no-print">
+
+    <!-- BACKDROP MÓVIL -->
+    <div id="sidebar-backdrop" class="fixed inset-0 bg-slate-900/50 z-40 hidden lg:hidden" onclick="toggleSidebar(false)"></div>
+
+    <!-- MENÚ LATERAL DE NAVEGACIÓN -->
+    <aside id="sidebar-nav" aria-label="Secciones del instrumento" class="fixed inset-y-0 left-0 z-50 w-72 bg-white border-r border-slate-200 p-4 transform -translate-x-full transition-transform duration-200 ease-in-out lg:static lg:translate-x-0 lg:w-72 lg:shrink-0 lg:rounded-xl lg:border lg:shadow-sm lg:h-fit lg:sticky lg:top-22 overflow-y-auto">
+      <div class="flex items-center justify-between lg:hidden pb-3 mb-3 border-b border-slate-200">
+        <span class="font-bold text-slate-800 text-sm">Navegación del Instrumento</span>
+        <button type="button" onclick="toggleSidebar(false)" aria-label="Cerrar menú" class="p-1.5 text-slate-500 hover:text-slate-800 rounded-lg">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <!-- Estado del registro activo -->
+      <div class="bg-slate-50 border border-slate-200 rounded-lg p-3 mb-4">
+        <div class="flex items-center justify-between gap-2 mb-1">
+          <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-500">Registro activo</span>
+          <span id="active-record-badge" class="text-[11px] font-medium px-2 py-0.5 rounded-full bg-blue-100 text-blue-800">Nuevo</span>
+        </div>
+        <p id="active-record-label" class="text-xs font-semibold text-slate-800 truncate">Sin guardar aún</p>
+        <p id="last-saved-label" class="text-[11px] text-slate-500 mt-0.5">Almacenamiento local en navegador</p>
+      </div>
+
+      <nav class="space-y-1">
+        <p class="px-2.5 pt-1 pb-1 text-[11px] font-bold uppercase tracking-wider text-slate-400">Estructura del Instrumento</p>
+
+        <a href="#sec-presentacion" onclick="handleNavClick(event, 'sec-presentacion')" class="nav-link flex items-center gap-2.5 px-3 py-2 text-sm font-medium rounded-lg text-slate-700 hover:bg-slate-100 transition">
+          <i class="fa-solid fa-file-lines w-4 text-center text-[#1B365D]"></i>
+          <span class="truncate">A. Presentación y Marco</span>
+        </a>
+
+        <a href="#sec-datos-generales" onclick="handleNavClick(event, 'sec-datos-generales')" class="nav-link flex items-center gap-2.5 px-3 py-2 text-sm font-medium rounded-lg text-slate-700 hover:bg-slate-100 transition">
+          <i class="fa-solid fa-building-columns w-4 text-center text-[#1B365D]"></i>
+          <span class="truncate">C. Datos Generales</span>
+        </a>
+
+        <p class="px-2.5 pt-3 pb-1 text-[11px] font-bold uppercase tracking-wider text-slate-400">D. Dimensiones (21 Indicadores)</p>
+
+        <a href="#dim-1" onclick="handleNavClick(event, 'dim-1')" class="nav-link flex items-center justify-between gap-2 px-3 py-2 text-sm font-medium rounded-lg text-slate-700 hover:bg-slate-100 transition">
+          <span class="flex items-center gap-2.5 min-w-0">
+            <i class="fa-solid fa-network-wired w-4 text-center text-blue-700"></i>
+            <span class="truncate">Dim. 1: Infraestructura</span>
+          </span>
+          <span id="nav-count-dim1" class="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 shrink-0">0/7</span>
+        </a>
+
+        <a href="#dim-2" onclick="handleNavClick(event, 'dim-2')" class="nav-link flex items-center justify-between gap-2 px-3 py-2 text-sm font-medium rounded-lg text-slate-700 hover:bg-slate-100 transition">
+          <span class="flex items-center gap-2.5 min-w-0">
+            <i class="fa-solid fa-chalkboard-user w-4 text-center text-teal-700"></i>
+            <span class="truncate">Dim. 2: Pedagógica</span>
+          </span>
+          <span id="nav-count-dim2" class="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 shrink-0">0/7</span>
+        </a>
+
+        <a href="#dim-3" onclick="handleNavClick(event, 'dim-3')" class="nav-link flex items-center justify-between gap-2 px-3 py-2 text-sm font-medium rounded-lg text-slate-700 hover:bg-slate-100 transition">
+          <span class="flex items-center gap-2.5 min-w-0">
+            <i class="fa-solid fa-sitemap w-4 text-center text-amber-700"></i>
+            <span class="truncate">Dim. 3: Gestión y Gobernanza</span>
+          </span>
+          <span id="nav-count-dim3" class="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 shrink-0">0/7</span>
+        </a>
+
+        <a href="#sec-observaciones" onclick="handleNavClick(event, 'sec-observaciones')" class="nav-link flex items-center gap-2.5 px-3 py-2 text-sm font-medium rounded-lg text-slate-700 hover:bg-slate-100 transition">
+          <i class="fa-solid fa-comment-dots w-4 text-center text-[#1B365D]"></i>
+          <span class="truncate">Observaciones Generales</span>
+        </a>
+
+        <p class="px-2.5 pt-3 pb-1 text-[11px] font-bold uppercase tracking-wider text-slate-400">Gestión y Resultados</p>
+
+        <button type="button" onclick="switchView('report')" id="btn-nav-report" class="w-full flex items-center gap-2.5 px-3 py-2 text-sm font-medium rounded-lg text-slate-700 hover:bg-slate-100 transition text-left">
+          <i class="fa-solid fa-file-export w-4 text-center text-emerald-700"></i>
+          <span class="truncate">Vista Previa y Exportación</span>
+        </button>
+
+        <button type="button" onclick="switchView('records')" id="btn-nav-records" class="w-full flex items-center justify-between gap-2 px-3 py-2 text-sm font-medium rounded-lg text-slate-700 hover:bg-slate-100 transition text-left">
+          <span class="flex items-center gap-2.5 min-w-0">
+            <i class="fa-solid fa-folder-open w-4 text-center text-indigo-700"></i>
+            <span class="truncate">Registros Guardados</span>
+          </span>
+          <span id="saved-records-count" class="text-xs font-bold px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-800">0</span>
+        </button>
+      </nav>
+
+      <!-- Acciones rápidas -->
+      <div class="mt-5 pt-4 border-t border-slate-200 space-y-2">
+        <button type="button" onclick="createNewRecord(true)" class="w-full flex items-center justify-center gap-2 px-3 py-2 text-xs font-semibold rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-50 transition">
+          <i class="fa-solid fa-plus"></i>
+          <span>Nuevo Registro en Blanco</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- ÁREA PRINCIPAL DE CONTENIDO -->
+    <main class="flex-1 min-w-0 space-y-6">
+
+      <!-- BARRA DE TABS SUPERIOR PARA ALTERNAR ENTRE FORMULARIO, REPORTE Y REGISTROS -->
+      <div class="bg-white rounded-xl border border-slate-200 p-1.5 shadow-sm flex flex-wrap gap-1.5" role="tablist" aria-label="Vistas de la aplicación">
+        <button type="button" role="tab" id="tab-form" aria-selected="true" onclick="switchView('form')" class="flex-1 min-w-[140px] flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold bg-[#1B365D] text-white shadow-sm transition">
+          <i class="fa-solid fa-pen-to-square"></i>
+          <span>Instrumento de Aplicación</span>
+        </button>
+        <button type="button" role="tab" id="tab-report" aria-selected="false" onclick="switchView('report')" class="flex-1 min-w-[140px] flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold text-slate-600 hover:bg-slate-100 transition">
+          <i class="fa-solid fa-print"></i>
+          <span>Resultados y Exportación</span>
+        </button>
+        <button type="button" role="tab" id="tab-records" aria-selected="false" onclick="switchView('records')" class="flex-1 min-w-[140px] flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold text-slate-600 hover:bg-slate-100 transition">
+          <i class="fa-solid fa-database"></i>
+          <span>Registros Locales (<span id="tab-records-count">0</span>)</span>
+        </button>
+      </div>
+
+      <!-- ===================================================================== -->
+      <!-- VISTA 1: FORMULARIO DEL INSTRUMENTO DE CARACTERIZACIÓN                -->
+      <!-- ===================================================================== -->
+      <div id="view-form" class="space-y-6">
+
+        <!-- A. PRESENTACIÓN Y B. MARCO DE REFERENCIA -->
+        <section id="sec-presentacion" class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+          <div class="bg-gradient-to-r from-[#1B365D] to-[#27497A] px-6 py-5 text-white">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <span class="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider bg-white/15 px-3 py-1 rounded-full">
+                <i class="fa-solid fa-compass"></i> Caracterización Institucional TIC
+              </span>
+              <span class="text-xs text-slate-200">República Dominicana &bull; PEC 2022-2026</span>
+            </div>
+            <h2 class="text-xl sm:text-2xl font-bold mt-2">
+              Instrumento de Caracterización Tecnológica del Centro Educativo
+            </h2>
+          </div>
+
+          <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- A. Presentación -->
+            <div class="bg-slate-50 rounded-xl p-5 border border-slate-200/80">
+              <div class="flex items-center gap-2.5 mb-3">
+                <span class="w-7 h-7 rounded-lg bg-[#1B365D] text-white text-xs font-bold flex items-center justify-center">A</span>
+                <h3 class="text-base font-bold text-slate-900">Presentación</h3>
+              </div>
+              <p class="text-sm text-slate-700 leading-relaxed">
+                Este instrumento tiene como propósito recoger información organizada y verificable sobre las condiciones tecnológicas del centro educativo, la integración pedagógica de las TIC y la forma en que la tecnología se contempla en la gestión institucional. Los resultados permitirán reconocer fortalezas, necesidades y prioridades de mejora, sin confundir la información registrada en el PEC con la situación actual, que debe comprobarse mediante observación, entrevistas y revisión documental.
+              </p>
+            </div>
+
+            <!-- B. Marco de referencia -->
+            <div class="bg-amber-50/60 rounded-xl p-5 border border-amber-200/80">
+              <div class="flex items-center gap-2.5 mb-3">
+                <span class="w-7 h-7 rounded-lg bg-amber-700 text-white text-xs font-bold flex items-center justify-center">B</span>
+                <h3 class="text-base font-bold text-slate-900">Marco de referencia</h3>
+              </div>
+              <p class="text-sm text-slate-700 leading-relaxed">
+                El instrumento toma como punto de partida el <strong>PEC 2022-2026 de la Escuela Santa María</strong>, que plantea una educación de calidad, la formación de estudiantes críticos, la innovación mediante el trabajo cooperativo y el aprendizaje por proyectos, así como metas relacionadas con un sistema de información digital, un registro digital, una página web y espacios para laboratorios tecnológicos. El PEC también identifica la inexistencia de un laboratorio de informática como debilidad institucional.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- C. DATOS GENERALES -->
+        <section id="sec-datos-generales" class="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+          <div class="flex items-center justify-between flex-wrap gap-2 pb-4 mb-5 border-b border-slate-200">
+            <div class="flex items-center gap-2.5">
+              <span class="w-8 h-8 rounded-lg bg-[#1B365D] text-white text-sm font-bold flex items-center justify-center">C</span>
+              <div>
+                <h3 class="text-lg font-bold text-slate-900">Datos Generales</h3>
+                <p class="text-xs text-slate-500">Identificación institucional, actores informantes y técnicas de verificación aplicadas</p>
+              </div>
+            </div>
+            <button type="button" onclick="resetGeneralDefaults()" class="text-xs font-medium text-blue-700 hover:text-blue-900 underline">
+              Restaurar datos base de Escuela Santa María
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <!-- Centro educativo -->
+            <div class="md:col-span-2">
+              <label for="dg-centro" class="block text-sm font-semibold text-slate-800 mb-1">
+                Centro educativo
+              </label>
+              <input type="text" id="dg-centro" value="Escuela Primaria con servicio de Secundaria Santa María"
+                class="w-full rounded-lg border border-slate-300 px-3.5 py-2.5 text-sm text-slate-800 bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 outline-none transition" />
+            </div>
+
+            <!-- Regional / Distrito -->
+            <div>
+              <label for="dg-regional" class="block text-sm font-semibold text-slate-800 mb-1">
+                Regional / Distrito
+              </label>
+              <input type="text" id="dg-regional" value="04 / 02"
+                class="w-full rounded-lg border border-slate-300 px-3.5 py-2.5 text-sm text-slate-800 bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 outline-none transition" />
+            </div>
+
+            <!-- Zona de Ubicación -->
+            <div>
+              <label for="dg-zona" class="block text-sm font-semibold text-slate-800 mb-1">
+                Zona de Ubicación
+              </label>
+              <input type="text" id="dg-zona" value="Rural"
+                class="w-full rounded-lg border border-slate-300 px-3.5 py-2.5 text-sm text-slate-800 bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 outline-none transition" />
+            </div>
+
+            <!-- Niveles y modalidad -->
+            <div>
+              <label for="dg-niveles" class="block text-sm font-semibold text-slate-800 mb-1">
+                Niveles y modalidad
+              </label>
+              <input type="text" id="dg-niveles" value="Inicial, Primario y Secundario; Jornada Escolar Extendida"
+                class="w-full rounded-lg border border-slate-300 px-3.5 py-2.5 text-sm text-slate-800 bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 outline-none transition" />
+            </div>
+
+            <!-- Fecha de aplicación -->
+            <div>
+              <label for="dg-fecha" class="block text-sm font-semibold text-slate-800 mb-1">
+                Fecha de aplicación <span class="text-red-600">*</span>
+              </label>
+              <input type="date" id="dg-fecha"
+                class="w-full rounded-lg border border-slate-300 px-3.5 py-2.5 text-sm text-slate-800 bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 outline-none transition" />
+            </div>
+
+            <!-- Personas que aportan la información -->
+            <div class="md:col-span-2 bg-slate-50 rounded-xl p-4 border border-slate-200">
+              <span class="block text-sm font-semibold text-slate-800 mb-2">
+                Personas que aportan la información
+              </span>
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5" id="personas-group">
+                <label class="flex items-center gap-2.5 p-2.5 rounded-lg bg-white border border-slate-200 cursor-pointer hover:border-blue-400 transition">
+                  <input type="checkbox" name="personas" value="Dirección" class="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500" />
+                  <span class="text-sm text-slate-700">Dirección</span>
+                </label>
+                <label class="flex items-center gap-2.5 p-2.5 rounded-lg bg-white border border-slate-200 cursor-pointer hover:border-blue-400 transition">
+                  <input type="checkbox" name="personas" value="Equipo de gestión" class="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500" />
+                  <span class="text-sm text-slate-700">Equipo de gestión</span>
+                </label>
+                <label class="flex items-center gap-2.5 p-2.5 rounded-lg bg-white border border-slate-200 cursor-pointer hover:border-blue-400 transition">
+                  <input type="checkbox" name="personas" value="Docentes" class="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500" />
+                  <span class="text-sm text-slate-700">Docentes</span>
+                </label>
+                <label class="flex items-center gap-2.5 p-2.5 rounded-lg bg-white border border-slate-200 cursor-pointer hover:border-blue-400 transition">
+                  <input type="checkbox" name="personas" value="Responsable TIC (si existe)" class="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500" />
+                  <span class="text-sm text-slate-700">Responsable TIC (si existe)</span>
+                </label>
+                <label class="flex items-center gap-2.5 p-2.5 rounded-lg bg-white border border-slate-200 cursor-pointer hover:border-blue-400 transition">
+                  <input type="checkbox" name="personas" value="Personal administrativo" class="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500" />
+                  <span class="text-sm text-slate-700">Personal administrativo</span>
+                </label>
+              </div>
+              <div class="mt-3">
+                <label for="dg-personas-detalle" class="block text-xs font-medium text-slate-600 mb-1">
+                  Nombres / cargos específicos de los informantes (opcional):
+                </label>
+                <input type="text" id="dg-personas-detalle" placeholder="Ej.: Directora del centro, Coordinadora pedagógica, 4 docentes de Primaria y Secundaria..."
+                  class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-800 bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 outline-none transition" />
+              </div>
+            </div>
+
+            <!-- Técnicas utilizadas -->
+            <div class="md:col-span-2 bg-slate-50 rounded-xl p-4 border border-slate-200">
+              <span class="block text-sm font-semibold text-slate-800 mb-2">
+                Técnicas utilizadas
+              </span>
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5" id="tecnicas-group">
+                <label class="flex items-center gap-2.5 p-2.5 rounded-lg bg-white border border-slate-200 cursor-pointer hover:border-blue-400 transition">
+                  <input type="checkbox" name="tecnicas" value="Revisión documental" class="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500" />
+                  <span class="text-sm text-slate-700">Revisión documental</span>
+                </label>
+                <label class="flex items-center gap-2.5 p-2.5 rounded-lg bg-white border border-slate-200 cursor-pointer hover:border-blue-400 transition">
+                  <input type="checkbox" name="tecnicas" value="Observación" class="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500" />
+                  <span class="text-sm text-slate-700">Observación</span>
+                </label>
+                <label class="flex items-center gap-2.5 p-2.5 rounded-lg bg-white border border-slate-200 cursor-pointer hover:border-blue-400 transition">
+                  <input type="checkbox" name="tecnicas" value="Entrevista" class="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500" />
+                  <span class="text-sm text-slate-700">Entrevista</span>
+                </label>
+                <label class="flex items-center gap-2.5 p-2.5 rounded-lg bg-white border border-slate-200 cursor-pointer hover:border-blue-400 transition">
+                  <input type="checkbox" name="tecnicas" value="Inventario" class="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500" />
+                  <span class="text-sm text-slate-700">Inventario</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- AVISO METODOLÓGICO SOBRE VALORACIÓN -->
+        <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 flex items-start gap-3">
+          <i class="fa-solid fa-circle-info text-blue-700 mt-0.5 text-base"></i>
+          <div class="text-xs sm:text-sm text-blue-950">
+            <p class="font-semibold">Orientación para la valoración por niveles descriptivos:</p>
+            <p class="mt-0.5 text-blue-900">
+              Seleccione exactamente un nivel de valoración (<strong>Nivel básico</strong>, <strong>Nivel medio</strong> o <strong>Nivel avanzado</strong>) por cada uno de los 21 indicadores según la realidad verificada en el centro educativo, y registre las evidencias concretas que respaldan dicha valoración. Este instrumento es de carácter diagnóstico y descriptivo; no asigna calificaciones numéricas.
+            </p>
+          </div>
+        </div>
+
+        <!-- CONTENEDOR DINÁMICO DE LAS 3 DIMENSIONES Y SUS 21 INDICADORES -->
+        <div id="dimensions-container" class="space-y-8"></div>
+
+        <!-- 5. OBSERVACIONES GENERALES DE LA CARACTERIZACIÓN -->
+        <section id="sec-observaciones" class="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+          <div class="flex items-center gap-3 pb-4 mb-4 border-b border-slate-200">
+            <div class="w-9 h-9 rounded-lg bg-[#1B365D] text-white flex items-center justify-center shrink-0">
+              <i class="fa-solid fa-clipboard-check"></i>
+            </div>
+            <div>
+              <h3 class="text-lg font-bold text-slate-900">Observaciones generales de la caracterización</h3>
+              <p class="text-xs text-slate-500">Registre hallazgos relevantes, contrastes entre el PEC 2022-2026 y la situación verificada, y prioridades de atención.</p>
+            </div>
+          </div>
+
+          <label for="observaciones-generales" class="sr-only">Observaciones generales de la caracterización</label>
+          <textarea id="observaciones-generales" rows="6"
+            placeholder="Escriba aquí los hallazgos principales, situaciones relevantes observadas durante la visita o revisión documental, condiciones particulares de la zona rural y aspectos que requieren atención institucional..."
+            class="w-full rounded-xl border border-slate-300 p-4 text-sm text-slate-800 bg-slate-50/50 focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 outline-none transition leading-relaxed"></textarea>
+
+          <div class="mt-5 flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-slate-100">
+            <p class="text-xs text-slate-500">
+              <i class="fa-solid fa-shield-halved text-slate-400 mr-1"></i>
+              Los datos se guardan localmente en este navegador y dispositivo mediante <code>localStorage</code>.
+            </p>
+            <div class="flex flex-wrap items-center gap-2.5">
+              <button type="button" onclick="saveCurrentRecord(false)" class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold px-4 py-2.5 rounded-lg shadow-sm transition">
+                <i class="fa-solid fa-floppy-disk"></i>
+                <span>Guardar Caracterización</span>
+              </button>
+              <button type="button" onclick="switchView('report')" class="inline-flex items-center gap-2 bg-[#1B365D] hover:bg-[#142947] text-white text-sm font-semibold px-4 py-2.5 rounded-lg shadow-sm transition">
+                <i class="fa-solid fa-file-lines"></i>
+                <span>Ver Informe y Exportar</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- ===================================================================== -->
+      <!-- VISTA 2: RESULTADOS Y EXPORTACIÓN (IMPRESIÓN PDF / CSV / JSON)        -->
+      <!-- ===================================================================== -->
+      <div id="view-report" class="hidden space-y-6">
+        <!-- Barra de acciones de exportación -->
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h2 class="text-lg font-bold text-slate-900">Consolidado de Caracterización Tecnológica</h2>
+            <p class="text-xs text-slate-500">Revise el informe completo antes de imprimir en PDF o descargar los datos estructurados.</p>
+          </div>
+          <div class="flex flex-wrap items-center gap-2.5">
+            <button type="button" onclick="window.print()" class="inline-flex items-center gap-2 bg-[#1B365D] hover:bg-[#142947] text-white text-sm font-semibold px-4 py-2.5 rounded-lg shadow-sm transition">
+              <i class="fa-solid fa-print"></i>
+              <span>Imprimir / Guardar PDF</span>
+            </button>
+            <button type="button" onclick="exportCurrentCSV()" class="inline-flex items-center gap-2 bg-teal-700 hover:bg-teal-800 text-white text-sm font-semibold px-4 py-2.5 rounded-lg shadow-sm transition">
+              <i class="fa-solid fa-file-csv"></i>
+              <span>Exportar CSV</span>
+            </button>
+            <button type="button" onclick="exportCurrentJSON()" class="inline-flex items-center gap-2 bg-slate-700 hover:bg-slate-800 text-white text-sm font-semibold px-4 py-2.5 rounded-lg shadow-sm transition">
+              <i class="fa-solid fa-file-code"></i>
+              <span>Exportar JSON</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Documento formateado para lectura e impresión -->
+        <div id="report-preview-body" class="bg-white rounded-xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-6">
+          <!-- Se renderiza dinámicamente mediante JS -->
+        </div>
+      </div>
+
+      <!-- ===================================================================== -->
+      <!-- VISTA 3: GESTIÓN DE REGISTROS GUARDADOS EN LOCALSTORAGE               -->
+      <!-- ===================================================================== -->
+      <div id="view-records" class="hidden space-y-6">
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+          <div class="flex flex-wrap items-start justify-between gap-4 pb-5 mb-5 border-b border-slate-200">
+            <div>
+              <h2 class="text-lg font-bold text-slate-900">Registros Guardados en este Navegador</h2>
+              <p class="text-xs text-slate-500 mt-1">
+                Almacenamiento local (<code>localStorage</code>) en este dispositivo. Exporte la base de datos en JSON para respaldar o trasladar sus registros a otro equipo.
+              </p>
+            </div>
+            <div class="flex flex-wrap items-center gap-2.5">
+              <button type="button" onclick="createNewRecord(true)" class="inline-flex items-center gap-2 bg-[#1B365D] hover:bg-[#142947] text-white text-xs sm:text-sm font-semibold px-3.5 py-2 rounded-lg shadow-sm transition">
+                <i class="fa-solid fa-plus"></i>
+                <span>Nueva Caracterización</span>
+              </button>
+              <button type="button" onclick="exportDatabaseJSON()" class="inline-flex items-center gap-2 bg-slate-700 hover:bg-slate-800 text-white text-xs sm:text-sm font-semibold px-3.5 py-2 rounded-lg shadow-sm transition">
+                <i class="fa-solid fa-download"></i>
+                <span>Exportar Base JSON</span>
+              </button>
+              <label class="inline-flex items-center gap-2 bg-amber-600 hover:bg-amber-700 text-white text-xs sm:text-sm font-semibold px-3.5 py-2 rounded-lg shadow-sm transition cursor-pointer">
+                <i class="fa-solid fa-upload"></i>
+                <span>Importar Base JSON</span>
+                <input type="file" id="import-json-input" accept=".json,application/json" class="hidden" onchange="importDatabaseJSON(event)" />
+              </label>
+            </div>
+          </div>
+
+          <div id="records-list-container" class="space-y-3">
+            <!-- Se renderiza dinámicamente -->
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- CONTENEDOR EXCLUSIVO PARA IMPRESIÓN (@media print) -->
+  <div id="print-report-container" class="hidden"></div>
+
+  <!-- NOTIFICACIÓN FLOTANTE (TOAST) -->
+  <div id="toast-container" aria-live="polite" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none px-4 sm:px-0"></div>
+
+  <!-- MODAL DE CONFIRMACIÓN -->
+  <div id="confirm-modal" role="dialog" aria-modal="true" aria-labelledby="confirm-modal-title" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/60 p-4 no-print">
+    <div class="bg-white rounded-xl max-w-md w-full p-6 shadow-xl border border-slate-200">
+      <div class="flex items-center gap-3 text-red-600 mb-3">
+        <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center shrink-0">
+          <i class="fa-solid fa-triangle-exclamation text-lg"></i>
+        </div>
+        <h3 id="confirm-modal-title" class="text-base font-bold text-slate-900">Confirmar acción</h3>
+      </div>
+      <p id="confirm-modal-message" class="text-sm text-slate-600 leading-relaxed mb-5"></p>
+      <div class="flex items-center justify-end gap-2.5">
+        <button type="button" id="confirm-modal-cancel" class="px-4 py-2 text-sm font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg transition">
+          Cancelar
+        </button>
+        <button type="button" id="confirm-modal-ok" class="px-4 py-2 text-sm font-semibold text-white bg-red-600 hover:bg-red-700 rounded-lg transition">
+          Confirmar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ==========================================================================
+       1. ESTRUCTURA FIEL DEL INSTRUMENTO (EXTRAÍDA TEXTUALMENTE DEL PDF BASE)
+       ========================================================================== */
+    const INSTRUMENT_DATA = [
+      {
+        id: 'dim1',
+        number: 1,
+        title: 'DIMENSIÓN 1. INFRAESTRUCTURA Y CONECTIVIDAD',
+        shortTitle: 'Infraestructura y conectividad',
+        icon: 'fa-network-wired',
+        accentClass: 'border-blue-700',
+        badgeClass: 'bg-blue-700 text-white',
+        indicators: [
+          {
+            id: '1.1',
+            criterio: 'Disponibilidad de hardware',
+            nombre: '1.1-Existencia de espacios destinados al uso de recursos tecnológicos.',
+            basico: 'No se dispone de espacios tecnológicos.',
+            medio: 'Se dispone de algunos espacios, pero su uso es limitado.',
+            avanzado: 'Se cuenta con espacios adecuados y disponibles para actividades tecnológicas.'
+          },
+          {
+            id: '1.2',
+            criterio: 'Disponibilidad de hardware',
+            nombre: '1.2-Disponibilidad de computadoras, laptops, tabletas, proyectores u otros equipos.',
+            basico: 'Los equipos son escasos o no están disponibles.',
+            medio: 'Se cuenta con algunos equipos, pero no cubren las necesidades del centro.',
+            avanzado: 'Existe disponibilidad suficiente de equipos para apoyar las actividades educativas y administrativas.'
+          },
+          {
+            id: '1.3',
+            criterio: 'Disponibilidad de hardware',
+            nombre: '1.3-Estado y funcionamiento de los equipos tecnológicos.',
+            basico: 'La mayoría de los equipos presenta fallas o no funciona.',
+            medio: 'Algunos equipos funcionan, mientras otros requieren reparación o actualización.',
+            avanzado: 'Los equipos se encuentran en condiciones adecuadas de funcionamiento.'
+          },
+          {
+            id: '1.4',
+            criterio: 'Calidad y alcance de la red',
+            nombre: '1.4-Calidad y estabilidad de la conexión a internet.',
+            basico: 'No hay conexión o presenta interrupciones constantes.',
+            medio: 'La conexión existe, pero presenta dificultades de estabilidad o velocidad.',
+            avanzado: 'La conexión es estable y permite desarrollar actividades educativas y administrativas.'
+          },
+          {
+            id: '1.5',
+            criterio: 'Calidad y alcance de la red',
+            nombre: '1.5-Acceso a internet en las aulas y áreas administrativas.',
+            basico: 'El acceso es inexistente o muy limitado.',
+            medio: 'El acceso está disponible en algunas áreas.',
+            avanzado: 'El acceso está disponible en las áreas necesarias del centro.'
+          },
+          {
+            id: '1.6',
+            criterio: 'Mantenimiento y soporte técnico',
+            nombre: '1.6-Existencia de procedimientos para el mantenimiento de los equipos tecnológicos.',
+            basico: 'No existen procedimientos de mantenimiento.',
+            medio: 'El mantenimiento se realiza ocasionalmente.',
+            avanzado: 'Se realizan acciones de mantenimiento de manera organizada y periódica.'
+          },
+          {
+            id: '1.7',
+            criterio: 'Mantenimiento y soporte técnico',
+            nombre: '1.7-Disponibilidad de apoyo técnico para resolver problemas relacionados con los equipos y la conectividad.',
+            basico: 'No se dispone de apoyo técnico.',
+            medio: 'Se recibe apoyo de manera ocasional.',
+            avanzado: 'Existe apoyo técnico oportuno para atender las necesidades tecnológicas.'
+          }
+        ]
+      },
+      {
+        id: 'dim2',
+        number: 2,
+        title: 'DIMENSIÓN 2. PEDAGÓGICA Y CURRICULAR',
+        shortTitle: 'Pedagógica y curricular',
+        icon: 'fa-chalkboard-user',
+        accentClass: 'border-teal-700',
+        badgeClass: 'bg-teal-700 text-white',
+        indicators: [
+          {
+            id: '2.1',
+            criterio: 'Integración de las TIC en la planificación docente',
+            nombre: '2.1-Inclusión de recursos tecnológicos en las planificaciones de clase.',
+            basico: 'Las planificaciones no contemplan el uso de las TIC.',
+            medio: 'Las TIC se incluyen en algunas planificaciones, de manera ocasional.',
+            avanzado: 'Las TIC se integran de forma planificada y relacionada con los propósitos de aprendizaje.'
+          },
+          {
+            id: '2.2',
+            criterio: 'Uso de recursos digitales en la enseñanza',
+            nombre: '2.2-Utilización de recursos digitales en las actividades de enseñanza y aprendizaje.',
+            basico: 'No se utilizan recursos digitales o su uso es muy limitado.',
+            medio: 'Se utilizan algunos recursos digitales, pero de manera esporádica.',
+            avanzado: 'Se utilizan diversos recursos digitales de forma organizada para apoyar el aprendizaje.'
+          },
+          {
+            id: '2.3',
+            criterio: 'Uso de recursos digitales en la enseñanza',
+            nombre: '2.3-Adecuación de los recursos tecnológicos a las necesidades de los estudiantes y a las condiciones del centro.',
+            basico: 'No se evidencia adaptación de los recursos a las necesidades del contexto.',
+            medio: 'Se realizan algunas adaptaciones, aunque no siempre responden a las necesidades existentes.',
+            avanzado: 'Los recursos se seleccionan y adaptan considerando las características de los estudiantes y las condiciones del centro.'
+          },
+          {
+            id: '2.4',
+            criterio: 'Competencias digitales docentes',
+            nombre: '2.4-Manejo de herramientas y recursos tecnológicos por parte de los docentes.',
+            basico: 'Los docentes presentan dificultades para utilizar herramientas tecnológicas.',
+            medio: 'Los docentes manejan algunas herramientas, aunque necesitan acompañamiento.',
+            avanzado: 'Los docentes utilizan diferentes herramientas tecnológicas con autonomía en sus actividades educativas.'
+          },
+          {
+            id: '2.5',
+            criterio: 'Formación e innovación docente',
+            nombre: '2.5-Participación de los docentes en actividades de formación relacionadas con el uso educativo de las TIC.',
+            basico: 'No se evidencia participación en actividades de formación.',
+            medio: 'Algunos docentes participan ocasionalmente en actividades formativas.',
+            avanzado: 'Existe participación frecuente en procesos de formación y actualización tecnológica.'
+          },
+          {
+            id: '2.6',
+            criterio: 'Formación e innovación docente',
+            nombre: '2.6-Desarrollo y socialización de prácticas innovadoras apoyadas en tecnología.',
+            basico: 'No se evidencian prácticas innovadoras con apoyo tecnológico.',
+            medio: 'Se desarrollan algunas experiencias, pero se comparten poco.',
+            avanzado: 'Los docentes desarrollan y comparten experiencias innovadoras que integran las TIC.'
+          },
+          {
+            id: '2.7',
+            criterio: 'Evaluación del aprendizaje con apoyo tecnológico',
+            nombre: '2.7-Uso de herramientas digitales para evaluar y dar seguimiento al aprendizaje de los estudiantes.',
+            basico: 'No se utilizan herramientas digitales para evaluar o dar seguimiento.',
+            medio: 'Se utilizan algunas herramientas digitales de manera ocasional.',
+            avanzado: 'Se emplean herramientas digitales de forma planificada para evaluar y dar seguimiento al aprendizaje.'
+          }
+        ]
+      },
+      {
+        id: 'dim3',
+        number: 3,
+        title: 'DIMENSIÓN 3. GESTIÓN Y GOBERNANZA INSTITUCIONAL',
+        shortTitle: 'Gestión y gobernanza institucional',
+        icon: 'fa-sitemap',
+        accentClass: 'border-amber-700',
+        badgeClass: 'bg-amber-700 text-white',
+        indicators: [
+          {
+            id: '3.1',
+            criterio: 'Integración de la tecnología en los proyectos institucionales',
+            nombre: '3.1-Inclusión del uso de las TIC en el Proyecto Educativo de Centro (PEC).',
+            basico: 'El PEC no contempla el uso de la tecnología.',
+            medio: 'El PEC menciona el uso de la tecnología, pero sin acciones claramente definidas.',
+            avanzado: 'El PEC contempla acciones concretas para integrar la tecnología en los procesos institucionales.'
+          },
+          {
+            id: '3.2',
+            criterio: 'Integración de la tecnología en los proyectos institucionales',
+            nombre: '3.2-Articulación del uso de las TIC con el Proyecto Curricular de Centro (PCC).',
+            basico: 'No se evidencia relación entre las TIC y el PCC.',
+            medio: 'Se establecen algunas relaciones, pero no se desarrollan de manera sistemática.',
+            avanzado: 'El uso de las TIC se articula con las orientaciones y acciones del PCC.'
+          },
+          {
+            id: '3.3',
+            criterio: 'Políticas de uso responsable y seguridad de la información',
+            nombre: '3.3-Existencia de orientaciones para el uso responsable de los recursos tecnológicos.',
+            basico: 'No existen orientaciones sobre el uso responsable de la tecnología.',
+            medio: 'Existen algunas orientaciones, pero su aplicación es limitada.',
+            avanzado: 'Se cuenta con orientaciones claras y se promueve su cumplimiento.'
+          },
+          {
+            id: '3.4',
+            criterio: 'Políticas de uso responsable y seguridad de la información',
+            nombre: '3.4-Aplicación de medidas para proteger la información y los datos de la comunidad educativa.',
+            basico: 'No se identifican medidas de protección.',
+            medio: 'Se aplican algunas medidas, aunque de manera parcial.',
+            avanzado: 'Se aplican medidas organizadas para proteger la información y los datos institucionales.'
+          },
+          {
+            id: '3.5',
+            criterio: 'Liderazgo y acompañamiento institucional',
+            nombre: '3.5-Promoción del uso educativo de la tecnología por parte del equipo de gestión.',
+            basico: 'El equipo de gestión no promueve el uso de las TIC.',
+            medio: 'El equipo de gestión promueve algunas iniciativas de manera ocasional.',
+            avanzado: 'El equipo de gestión impulsa y acompaña iniciativas para integrar las TIC en el centro.'
+          },
+          {
+            id: '3.6',
+            criterio: 'Presupuesto y recursos tecnológicos',
+            nombre: '3.6-Asignación de recursos para la adquisición, mantenimiento y actualización de equipos tecnológicos.',
+            basico: 'No se evidencia asignación de recursos para atender las necesidades tecnológicas.',
+            medio: 'Se destinan algunos recursos, pero resultan insuficientes o no responden a una planificación.',
+            avanzado: 'Se planifica la asignación de recursos para adquirir, mantener y actualizar los equipos tecnológicos.'
+          },
+          {
+            id: '3.7',
+            criterio: 'Participación y comunicación con las familias',
+            nombre: '3.7-Uso de medios digitales para mantener la comunicación entre la escuela y las familias e informar sobre actividades y procesos educativos.',
+            basico: 'No se utilizan medios digitales para la comunicación con las familias.',
+            medio: 'Se utilizan algunos medios digitales, pero la comunicación es ocasional o limitada.',
+            avanzado: 'Se utilizan medios digitales de manera organizada y frecuente para mantener informadas a las familias y favorecer su participación.'
+          }
+        ]
+      }
+    ];
+
+    const STORAGE_KEY = 'caracterizacion_tic_santa_maria_v1';
+    const DRAFT_KEY = 'caracterizacion_tic_santa_maria_draft_v1';
+
+    let currentRecordId = null;
+    let currentState = createEmptyState();
+    let autoSaveTimer = null;
+
+    function getTodayISO() {
+      const now = new Date();
+      const offset = now.getTimezoneOffset();
+      const local = new Date(now.getTime() - offset * 60 * 1000);
+      return local.toISOString().split('T')[0];
+    }
+
+    function createEmptyState() {
+      const evaluaciones = {};
+      INSTRUMENT_DATA.forEach(dim => {
+        dim.indicators.forEach(ind => {
+          evaluaciones[ind.id] = {
+            nivel: '',
+            evidencia: ''
+          };
+        });
+      });
+
+      return {
+        id: null,
+        datosGenerales: {
+          centro: 'Escuela Primaria con servicio de Secundaria Santa María',
+          regional: '04 / 02',
+          zona: 'Rural',
+          niveles: 'Inicial, Primario y Secundario; Jornada Escolar Extendida',
+          fecha: getTodayISO(),
+          personas: [],
+          personasDetalle: '',
+          tecnicas: []
+        },
+        evaluaciones,
+        observaciones: '',
+        updatedAt: null
+      };
+    }
+
+    /* ==========================================================================
+       2. RENDERIZADO DE LAS 3 DIMENSIONES Y SUS 21 INDICADORES
+       ========================================================================== */
+    function renderDimensions() {
+      const container = document.getElementById('dimensions-container');
+      container.innerHTML = '';
+
+      INSTRUMENT_DATA.forEach(dim => {
+        const section = document.createElement('section');
+        section.id = dim.id;
+        section.className = 'space-y-4 scroll-mt-20';
+
+        // Encabezado de Dimensión
+        const headerHtml = `
+          <div class="bg-white rounded-xl border-l-4 ${dim.accentClass} border border-slate-200 shadow-sm p-5 flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-lg ${dim.badgeClass} flex items-center justify-center shrink-0">
+                <i class="fa-solid ${dim.icon} text-base"></i>
+              </div>
+              <div>
+                <span class="text-[11px] font-bold uppercase tracking-wider text-slate-500">Dimensión ${dim.number} de 3</span>
+                <h3 class="text-base sm:text-lg font-bold text-slate-900">${dim.title}</h3>
+              </div>
+            </div>
+            <div class="flex items-center gap-2 bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-lg">
+              <span class="text-xs text-slate-600">Completados:</span>
+              <span id="dim-badge-${dim.id}" class="text-xs font-bold text-slate-900">0 / ${dim.indicators.length}</span>
+            </div>
+          </div>
+        `;
+
+        const cardsWrapper = document.createElement('div');
+        cardsWrapper.className = 'space-y-4';
+
+        dim.indicators.forEach(ind => {
+          const card = document.createElement('article');
+          card.id = `card-ind-${ind.id.replace('.', '-')}`;
+          card.className = 'bg-white rounded-xl border border-slate-200 shadow-sm p-5 sm:p-6 transition-colors';
+
+          card.innerHTML = `
+            <div class="flex flex-wrap items-start justify-between gap-2 pb-3 mb-4 border-b border-slate-100">
+              <div class="space-y-1">
+                <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 bg-slate-100 px-2.5 py-0.5 rounded-md">
+                  <i class="fa-solid fa-tag text-[10px] text-slate-400"></i>
+                  Criterio: ${escapeHTML(ind.criterio)}
+                </span>
+                <h4 class="text-base font-bold text-slate-900 leading-snug">
+                  ${escapeHTML(ind.nombre)}
+                </h4>
+              </div>
+              <span id="status-ind-${ind.id}" class="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-100 text-slate-500 shrink-0">
+                Pendiente
+              </span>
+            </div>
+
+            <!-- Tres niveles de valoración -->
+            <fieldset class="space-y-2">
+              <legend class="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">
+                Seleccione el nivel de valoración correspondiente:
+              </legend>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-3" role="radiogroup" aria-label="Nivel de valoración para ${escapeHTML(ind.nombre)}">
+                ${renderLevelOption(ind.id, 'basico', 'Nivel básico', ind.basico, 'amber')}
+                ${renderLevelOption(ind.id, 'medio', 'Nivel medio', ind.medio, 'blue')}
+                ${renderLevelOption(ind.id, 'avanzado', 'Nivel avanzado', ind.avanzado, 'emerald')}
+              </div>
+            </fieldset>
+
+            <!-- Campo de Evidencias -->
+            <div class="mt-4 pt-3 border-t border-slate-100">
+              <label for="evidencia-${ind.id}" class="flex items-center justify-between text-xs font-semibold text-slate-700 mb-1.5">
+                <span>
+                  <i class="fa-solid fa-magnifying-glass text-slate-400 mr-1"></i>
+                  Evidencias encontradas que justifican la valoración:
+                </span>
+                <span class="text-[11px] font-normal text-slate-400">Observación, documentos, entrevistas o inventario</span>
+              </label>
+              <textarea id="evidencia-${ind.id}" rows="2"
+                data-ind-id="${ind.id}"
+                placeholder="Registre las evidencias verificadas para el indicador ${ind.id}..."
+                class="evidencia-input w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-800 bg-slate-50/60 focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 outline-none transition"></textarea>
+            </div>
+          `;
+
+          cardsWrapper.appendChild(card);
+        });
+
+        section.innerHTML = headerHtml;
+        section.appendChild(cardsWrapper);
+        container.appendChild(section);
+      });
+
+      attachIndicatorListeners();
+    }
+
+    function renderLevelOption(indId, levelKey, levelLabel, description, colorTone) {
+      const inputId = `radio-${indId}-${levelKey}`;
+      return `
+        <label for="${inputId}" id="label-${indId}-${levelKey}" data-ind="${indId}" data-level="${levelKey}" data-tone="${colorTone}"
+          class="level-card relative flex flex-col justify-between p-4 rounded-xl border-2 border-slate-200 bg-white cursor-pointer hover:border-slate-300 select-none">
+          <div>
+            <div class="flex items-center justify-between gap-2 mb-2">
+              <span class="level-title text-xs font-bold uppercase tracking-wide text-slate-700">${levelLabel}</span>
+              <span class="level-check w-5 h-5 rounded-full border-2 border-slate-300 flex items-center justify-center text-white text-[10px] transition">
+                <i class="fa-solid fa-check opacity-0"></i>
+              </span>
+            </div>
+            <p class="text-xs sm:text-sm text-slate-700 leading-relaxed">${escapeHTML(description)}</p>
+          </div>
+          <input type="radio" id="${inputId}" name="nivel-${indId}" value="${levelKey}" class="sr-only level-radio" data-ind-id="${indId}" />
+        </label>
+      `;
+    }
+
+    function attachIndicatorListeners() {
+      document.querySelectorAll('.level-radio').forEach(radio => {
+        radio.addEventListener('change', (e) => {
+          const indId = e.target.dataset.indId;
+          const val = e.target.value;
+          currentState.evaluaciones[indId].nivel = val;
+          updateIndicatorVisualState(indId);
+          updateProgressUI();
+          scheduleDraftAutoSave();
+        });
+      });
+
+      document.querySelectorAll('.evidencia-input').forEach(textarea => {
+        textarea.addEventListener('input', (e) => {
+          const indId = e.target.dataset.indId;
+          currentState.evaluaciones[indId].evidencia = e.target.value;
+          scheduleDraftAutoSave();
+        });
+      });
+    }
+
+    function updateIndicatorVisualState(indId) {
+      const selectedLevel = currentState.evaluaciones[indId]?.nivel || '';
+      const levels = ['basico', 'medio', 'avanzado'];
+
+      const toneStyles = {
+        basico: {
+          card: 'border-amber-500 bg-amber-50/60 ring-2 ring-amber-500/20',
+          title: 'text-amber-900',
+          check: 'border-amber-600 bg-amber-600'
+        },
+        medio: {
+          card: 'border-blue-600 bg-blue-50/60 ring-2 ring-blue-600/20',
+          title: 'text-blue-900',
+          check: 'border-blue-600 bg-blue-600'
+        },
+        avanzado: {
+          card: 'border-emerald-600 bg-emerald-50/60 ring-2 ring-emerald-600/20',
+          title: 'text-emerald-900',
+          check: 'border-emerald-600 bg-emerald-600'
+        }
+      };
+
+      levels.forEach(lvl => {
+        const label = document.getElementById(`label-${indId}-${lvl}`);
+        const radio = document.getElementById(`radio-${indId}-${lvl}`);
+        if (!label || !radio) return;
+
+        const titleEl = label.querySelector('.level-title');
+        const checkEl = label.querySelector('.level-check');
+        const iconEl = checkEl.querySelector('i');
+
+        // Reset clases
+        label.className = 'level-card relative flex flex-col justify-between p-4 rounded-xl border-2 cursor-pointer select-none';
+        titleEl.className = 'level-title text-xs font-bold uppercase tracking-wide';
+        checkEl.className = 'level-check w-5 h-5 rounded-full border-2 flex items-center justify-center text-white text-[10px] transition';
+
+        if (selectedLevel === lvl) {
+          radio.checked = true;
+          const st = toneStyles[lvl];
+          label.classList.add(...st.card.split(' '));
+          titleEl.classList.add(...st.title.split(' '));
+          checkEl.classList.add(...st.check.split(' '));
+          iconEl.classList.remove('opacity-0');
+        } else {
+          radio.checked = false;
+          label.classList.add('border-slate-200', 'bg-white', 'hover:border-slate-300');
+          titleEl.classList.add('text-slate-700');
+          checkEl.classList.add('border-slate-300');
+          iconEl.classList.add('opacity-0');
+        }
+      });
+
+      // Actualizar insignia superior de la tarjeta del indicador
+      const badge = document.getElementById(`status-ind-${indId}`);
+      if (badge) {
+        if (!selectedLevel) {
+          badge.className = 'text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-100 text-slate-500 shrink-0';
+          badge.textContent = 'Pendiente';
+        } else if (selectedLevel === 'basico') {
+          badge.className = 'text-xs font-semibold px-2.5 py-1 rounded-full bg-amber-100 text-amber-800 shrink-0';
+          badge.textContent = 'Nivel básico';
+        } else if (selectedLevel === 'medio') {
+          badge.className = 'text-xs font-semibold px-2.5 py-1 rounded-full bg-blue-100 text-blue-800 shrink-0';
+          badge.textContent = 'Nivel medio';
+        } else if (selectedLevel === 'avanzado') {
+          badge.className = 'text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 shrink-0';
+          badge.textContent = 'Nivel avanzado';
+        }
+      }
+    }
+
+    /* ==========================================================================
+       3. PROGRESO DE LLENADO (SIN CALIFICACIÓN NI PONDERACIÓN)
+       ========================================================================== */
+    function updateProgressUI() {
+      let totalCompleted = 0;
+
+      INSTRUMENT_DATA.forEach(dim => {
+        let dimCompleted = 0;
+        dim.indicators.forEach(ind => {
+          if (currentState.evaluaciones[ind.id]?.nivel) {
+            dimCompleted++;
+            totalCompleted++;
+          }
+        });
+
+        const dimBadge = document.getElementById(`dim-badge-${dim.id}`);
+        if (dimBadge) dimBadge.textContent = `${dimCompleted} / ${dim.indicators.length}`;
+
+        const navCount = document.getElementById(`nav-count-${dim.id}`);
+        if (navCount) {
+          navCount.textContent = `${dimCompleted}/${dim.indicators.length}`;
+          if (dimCompleted === dim.indicators.length) {
+            navCount.className = 'text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 shrink-0';
+          } else if (dimCompleted > 0) {
+            navCount.className = 'text-xs font-semibold px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 shrink-0';
+          } else {
+            navCount.className = 'text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 shrink-0';
+          }
+        }
+      });
+
+      const pct = Math.round((totalCompleted / 21) * 100);
+      const headerText = document.getElementById('header-progress-text');
+      const mobileText = document.getElementById('mobile-progress-text');
+      const bar = document.getElementById('header-progress-bar');
+      const barWrap = document.getElementById('header-progress-bar-wrap');
+
+      if (headerText) headerText.textContent = `${totalCompleted} de 21 indicadores (${pct}%)`;
+      if (mobileText) mobileText.textContent = `${totalCompleted} / 21 (${pct}%)`;
+      if (bar) bar.style.width = `${pct}%`;
+      if (barWrap) barWrap.setAttribute('aria-valuenow', totalCompleted);
+    }
+
+    /* ==========================================================================
+       4. SINCRONIZACIÓN ENTRE FORMULARIO Y ESTADO
+       ========================================================================== */
+    function bindGeneralFormListeners() {
+      const mapInputs = [
+        { id: 'dg-centro', key: 'centro' },
+        { id: 'dg-regional', key: 'regional' },
+        { id: 'dg-zona', key: 'zona' },
+        { id: 'dg-niveles', key: 'niveles' },
+        { id: 'dg-fecha', key: 'fecha' },
+        { id: 'dg-personas-detalle', key: 'personasDetalle' }
+      ];
+
+      mapInputs.forEach(item => {
+        const el = document.getElementById(item.id);
+        if (el) {
+          el.addEventListener('input', (e) => {
+            currentState.datosGenerales[item.key] = e.target.value;
+            updateActiveRecordIndicator();
+            scheduleDraftAutoSave();
+          });
+        }
+      });
+
+      document.querySelectorAll('input[name="personas"]').forEach(cb => {
+        cb.addEventListener('change', () => {
+          currentState.datosGenerales.personas = Array.from(
+            document.querySelectorAll('input[name="personas"]:checked')
+          ).map(el => el.value);
+          scheduleDraftAutoSave();
+        });
+      });
+
+      document.querySelectorAll('input[name="tecnicas"]').forEach(cb => {
+        cb.addEventListener('change', () => {
+          currentState.datosGenerales.tecnicas = Array.from(
+            document.querySelectorAll('input[name="tecnicas"]:checked')
+          ).map(el => el.value);
+          scheduleDraftAutoSave();
+        });
+      });
+
+      const obsEl = document.getElementById('observaciones-generales');
+      if (obsEl) {
+        obsEl.addEventListener('input', (e) => {
+          currentState.observaciones = e.target.value;
+          scheduleDraftAutoSave();
+        });
+      }
+    }
+
+    function populateFormFromState() {
+      const dg = currentState.datosGenerales;
+      document.getElementById('dg-centro').value = dg.centro || '';
+      document.getElementById('dg-regional').value = dg.regional || '';
+      document.getElementById('dg-zona').value = dg.zona || '';
+      document.getElementById('dg-niveles').value = dg.niveles || '';
+      document.getElementById('dg-fecha').value = dg.fecha || '';
+      document.getElementById('dg-personas-detalle').value = dg.personasDetalle || '';
+
+      document.querySelectorAll('input[name="personas"]').forEach(cb => {
+        cb.checked = Array.isArray(dg.personas) && dg.personas.includes(cb.value);
+      });
+
+      document.querySelectorAll('input[name="tecnicas"]').forEach(cb => {
+        cb.checked = Array.isArray(dg.tecnicas) && dg.tecnicas.includes(cb.value);
+      });
+
+      INSTRUMENT_DATA.forEach(dim => {
+        dim.indicators.forEach(ind => {
+          const ev = currentState.evaluaciones[ind.id] || { nivel: '', evidencia: '' };
+          updateIndicatorVisualState(ind.id);
+          const textarea = document.getElementById(`evidencia-${ind.id}`);
+          if (textarea) textarea.value = ev.evidencia || '';
+        });
+      });
+
+      document.getElementById('observaciones-generales').value = currentState.observaciones || '';
+      updateProgressUI();
+      updateActiveRecordIndicator();
+    }
+
+    function resetGeneralDefaults() {
+      currentState.datosGenerales.centro = 'Escuela Primaria con servicio de Secundaria Santa María';
+      currentState.datosGenerales.regional = '04 / 02';
+      currentState.datosGenerales.zona = 'Rural';
+      currentState.datosGenerales.niveles = 'Inicial, Primario y Secundario; Jornada Escolar Extendida';
+      populateFormFromState();
+      scheduleDraftAutoSave();
+      showToast('Datos institucionales base de la Escuela Santa María restaurados.', 'info');
+    }
+
+    function updateActiveRecordIndicator() {
+      const badge = document.getElementById('active-record-badge');
+      const label = document.getElementById('active-record-label');
+      const savedLabel = document.getElementById('last-saved-label');
+
+      const centro = currentState.datosGenerales.centro?.trim() || 'Sin nombre de centro';
+      const fecha = currentState.datosGenerales.fecha || 'Sin fecha';
+      label.textContent = `${centro} (${fecha})`;
+
+      if (currentRecordId) {
+        badge.textContent = 'Guardado';
+        badge.className = 'text-[11px] font-medium px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800';
+      } else {
+        badge.textContent = 'Borrador';
+        badge.className = 'text-[11px] font-medium px-2 py-0.5 rounded-full bg-amber-100 text-amber-800';
+      }
+
+      if (currentState.updatedAt) {
+        const dt = new Date(currentState.updatedAt);
+        savedLabel.textContent = `Actualizado: ${dt.toLocaleDateString('es-DO')} ${dt.toLocaleTimeString('es-DO', { hour: '2-digit', minute: '2-digit' })}`;
+      } else {
+        savedLabel.textContent = 'Almacenamiento local en navegador';
+      }
+    }
+
+    /* ==========================================================================
+       5. ALMACENAMIENTO Y GESTIÓN DE DATOS (LOCALSTORAGE + JSON)
+       ========================================================================== */
+    function getSavedRecords() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return [];
+        const parsed = JSON.parse(raw);
+        return Array.isArray(parsed) ? parsed : [];
+      } catch (e) {
+        console.error('Error leyendo localStorage:', e);
+        return [];
+      }
+    }
+
+    function setSavedRecords(records) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+      updateRecordsCounters();
+    }
+
+    function updateRecordsCounters() {
+      const count = getSavedRecords().length;
+      const sideBadge = document.getElementById('saved-records-count');
+      const tabBadge = document.getElementById('tab-records-count');
+      if (sideBadge) sideBadge.textContent = count;
+      if (tabBadge) tabBadge.textContent = count;
+    }
+
+    function scheduleDraftAutoSave() {
+      clearTimeout(autoSaveTimer);
+      autoSaveTimer = setTimeout(() => {
+        try {
+          localStorage.setItem(DRAFT_KEY, JSON.stringify({
+            currentRecordId,
+            state: currentState
+          }));
+        } catch (e) {
+          console.warn('No se pudo guardar el borrador automático:', e);
+        }
+      }, 400);
+    }
+
+    function saveCurrentRecord(silent = false) {
+      const centro = currentState.datosGenerales.centro?.trim();
+      const fecha = currentState.datosGenerales.fecha?.trim();
+
+      if (!centro) {
+        showToast('Por favor indique el nombre del centro educativo antes de guardar.', 'error');
+        document.getElementById('dg-centro').focus();
+        return;
+      }
+      if (!fecha) {
+        showToast('Por favor seleccione la fecha de aplicación antes de guardar.', 'error');
+        document.getElementById('dg-fecha').focus();
+        return;
+      }
+
+      const records = getSavedRecords();
+      const nowISO = new Date().toISOString();
+
+      if (!currentRecordId) {
+        currentRecordId = 'rec_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7);
+      }
+
+      currentState.id = currentRecordId;
+      currentState.updatedAt = nowISO;
+
+      const copyToSave = JSON.parse(JSON.stringify(currentState));
+      const existingIndex = records.findIndex(r => r.id === currentRecordId);
+
+      if (existingIndex >= 0) {
+        records[existingIndex] = copyToSave;
+      } else {
+        records.unshift(copyToSave);
+      }
+
+      setSavedRecords(records);
+      scheduleDraftAutoSave();
+      updateActiveRecordIndicator();
+      renderRecordsList();
+
+      if (!silent) {
+        showToast('Caracterización guardada localmente en este navegador.', 'success');
+      }
+    }
+
+    function createNewRecord(askConfirm = false) {
+      const executeNew = () => {
+        currentRecordId = null;
+        currentState = createEmptyState();
+        populateFormFromState();
+        scheduleDraftAutoSave();
+        switchView('form');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        showToast('Nuevo registro iniciado con los datos base de la Escuela Santa María.', 'info');
+      };
+
+      if (askConfirm) {
+        openConfirmModal(
+          '¿Iniciar un nuevo registro en blanco?',
+          'Se limpiará el formulario actual para comenzar una nueva aplicación del instrumento. Asegúrese de haber guardado los cambios actuales si desea conservarlos.',
+          executeNew
+        );
+      } else {
+        executeNew();
+      }
+    }
+
+    function loadRecordForEdit(id) {
+      const records = getSavedRecords();
+      const found = records.find(r => r.id === id);
+      if (!found) {
+        showToast('No se encontró el registro solicitado.', 'error');
+        return;
+      }
+
+      currentRecordId = found.id;
+      currentState = normalizeRecordStructure(found);
+      populateFormFromState();
+      scheduleDraftAutoSave();
+      switchView('form');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      showToast('Registro cargado para edición.', 'success');
+    }
+
+    function loadRecordForReport(id) {
+      const records = getSavedRecords();
+      const found = records.find(r => r.id === id);
+      if (!found) return;
+
+      currentRecordId = found.id;
+      currentState = normalizeRecordStructure(found);
+      populateFormFromState();
+      switchView('report');
+    }
+
+    function deleteRecord(id) {
+      const records = getSavedRecords();
+      const target = records.find(r => r.id === id);
+      if (!target) return;
+
+      const label = `${target.datosGenerales?.centro || 'Registro'} (${target.datosGenerales?.fecha || 'Sin fecha'})`;
+
+      openConfirmModal(
+        '¿Eliminar este registro guardado?',
+        `Esta acción eliminará permanentemente el registro "${label}" del almacenamiento local de este navegador.`,
+        () => {
+          const updated = records.filter(r => r.id !== id);
+          setSavedRecords(updated);
+          if (currentRecordId === id) {
+            currentRecordId = null;
+            currentState.id = null;
+            updateActiveRecordIndicator();
+          }
+          renderRecordsList();
+          showToast('Registro eliminado correctamente.', 'info');
+        }
+      );
+    }
+
+    function renderRecordsList() {
+      const container = document.getElementById('records-list-container');
+      const records = getSavedRecords();
+
+      if (records.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-12 px-4 bg-slate-50 rounded-xl border border-dashed border-slate-300">
+            <div class="w-12 h-12 rounded-full bg-slate-200/70 text-slate-500 flex items-center justify-center mx-auto mb-3">
+              <i class="fa-solid fa-folder-open text-xl"></i>
+            </div>
+            <h3 class="text-sm font-bold text-slate-800">Aún no hay caracterizaciones guardadas</h3>
+            <p class="text-xs text-slate-500 max-w-md mx-auto mt-1">
+              Complete los datos del instrumento y haga clic en "Guardar" para almacenar registros localmente o importe un archivo de respaldo en formato JSON.
+            </p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = records.map(rec => {
+        const norm = normalizeRecordStructure(rec);
+        let answered = 0;
+        let countBasico = 0;
+        let countMedio = 0;
+        let countAvanzado = 0;
+
+        Object.values(norm.evaluaciones).forEach(ev => {
+          if (ev.nivel) {
+            answered++;
+            if (ev.nivel === 'basico') countBasico++;
+            if (ev.nivel === 'medio') countMedio++;
+            if (ev.nivel === 'avanzado') countAvanzado++;
+          }
+        });
+
+        const isCurrent = rec.id === currentRecordId;
+        const updatedText = rec.updatedAt
+          ? new Date(rec.updatedAt).toLocaleString('es-DO', { dateStyle: 'medium', timeStyle: 'short' })
+          : 'Fecha no registrada';
+
+        return `
+          <div class="rounded-xl border ${isCurrent ? 'border-blue-500 bg-blue-50/30' : 'border-slate-200 bg-white'} p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 transition hover:border-slate-300">
+            <div class="space-y-1.5 min-w-0">
+              <div class="flex flex-wrap items-center gap-2">
+                <h3 class="text-sm sm:text-base font-bold text-slate-900 truncate">
+                  ${escapeHTML(norm.datosGenerales.centro || 'Centro sin nombre')}
+                </h3>
+                ${isCurrent ? '<span class="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-blue-100 text-blue-800">En edición</span>' : ''}
+              </div>
+              <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-600">
+                <span><i class="fa-regular fa-calendar mr-1 text-slate-400"></i>Aplicación: <strong>${escapeHTML(norm.datosGenerales.fecha || 'Sin fecha')}</strong></span>
+                <span><i class="fa-solid fa-location-dot mr-1 text-slate-400"></i>Regional/Distrito: ${escapeHTML(norm.datosGenerales.regional || '-')}</span>
+                <span><i class="fa-regular fa-clock mr-1 text-slate-400"></i>Guardado: ${escapeHTML(updatedText)}</span>
+              </div>
+              <div class="flex flex-wrap items-center gap-2 pt-1 text-[11px] font-semibold">
+                <span class="px-2 py-0.5 rounded bg-slate-100 text-slate-700">Progreso: ${answered}/21 indicadores</span>
+                <span class="px-2 py-0.5 rounded bg-amber-100 text-amber-800">Básico: ${countBasico}</span>
+                <span class="px-2 py-0.5 rounded bg-blue-100 text-blue-800">Medio: ${countMedio}</span>
+                <span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">Avanzado: ${countAvanzado}</span>
+              </div>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2 shrink-0">
+              <button type="button" onclick="loadRecordForEdit('${rec.id}')" class="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-lg bg-blue-600 hover:bg-blue-700 text-white transition">
+                <i class="fa-solid fa-pen"></i>
+                <span>Editar</span>
+              </button>
+              <button type="button" onclick="loadRecordForReport('${rec.id}')" class="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 transition">
+                <i class="fa-solid fa-eye"></i>
+                <span>Informe</span>
+              </button>
+              <button type="button" onclick="deleteRecord('${rec.id}')" aria-label="Eliminar registro" class="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-lg bg-red-50 hover:bg-red-100 text-red-700 transition">
+                <i class="fa-solid fa-trash-can"></i>
+                <span>Eliminar</span>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function normalizeRecordStructure(raw) {
+      const base = createEmptyState();
+      if (!raw || typeof raw !== 'object') return base;
+
+      base.id = typeof raw.id === 'string' ? raw.id : null;
+      base.updatedAt = typeof raw.updatedAt === 'string' ? raw.updatedAt : null;
+      base.observaciones = typeof raw.observaciones === 'string' ? raw.observaciones : '';
+
+      if (raw.datosGenerales && typeof raw.datosGenerales === 'object') {
+        base.datosGenerales.centro = String(raw.datosGenerales.centro ?? base.datosGenerales.centro);
+        base.datosGenerales.regional = String(raw.datosGenerales.regional ?? base.datosGenerales.regional);
+        base.datosGenerales.zona = String(raw.datosGenerales.zona ?? base.datosGenerales.zona);
+        base.datosGenerales.niveles = String(raw.datosGenerales.niveles ?? base.datosGenerales.niveles);
+        base.datosGenerales.fecha = String(raw.datosGenerales.fecha ?? '');
+        base.datosGenerales.personasDetalle = String(raw.datosGenerales.personasDetalle ?? '');
+        base.datosGenerales.personas = Array.isArray(raw.datosGenerales.personas)
+          ? raw.datosGenerales.personas.map(String)
+          : [];
+        base.datosGenerales.tecnicas = Array.isArray(raw.datosGenerales.tecnicas)
+          ? raw.datosGenerales.tecnicas.map(String)
+          : [];
+      }
+
+      if (raw.evaluaciones && typeof raw.evaluaciones === 'object') {
+        Object.keys(base.evaluaciones).forEach(indId => {
+          const item = raw.evaluaciones[indId];
+          if (item && typeof item === 'object') {
+            const validLevels = ['basico', 'medio', 'avanzado'];
+            base.evaluaciones[indId].nivel = validLevels.includes(item.nivel) ? item.nivel : '';
+            base.evaluaciones[indId].evidencia = typeof item.evidencia === 'string' ? item.evidencia : '';
+          }
+        });
+      }
+
+      return base;
+    }
+
+    function exportDatabaseJSON() {
+      const records = getSavedRecords();
+      if (records.length === 0) {
+        showToast('No hay registros guardados para exportar en la base de datos.', 'error');
+        return;
+      }
+
+      const payload = {
+        aplicacion: 'Instrumento de Caracterización Tecnológica del Centro Educativo',
+        institucionBase: 'Escuela Primaria con servicio de Secundaria Santa María',
+        exportadoEn: new Date().toISOString(),
+        totalRegistros: records.length,
+        registros: records
+      };
+
+      downloadFile(
+        JSON.stringify(payload, null, 2),
+        `Base_Caracterizacion_TIC_SantaMaria_${getTodayISO()}.json`,
+        'application/json'
+      );
+      showToast('Base de datos JSON exportada correctamente.', 'success');
+    }
+
+    function importDatabaseJSON(event) {
+      const file = event.target.files?.[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const parsed = JSON.parse(e.target.result);
+          let incomingList = [];
+
+          if (Array.isArray(parsed)) {
+            incomingList = parsed;
+          } else if (parsed && Array.isArray(parsed.registros)) {
+            incomingList = parsed.registros;
+          } else if (parsed && parsed.datosGenerales && parsed.evaluaciones) {
+            incomingList = [parsed];
+          } else {
+            throw new Error('Estructura de archivo JSON no válida para este instrumento.');
+          }
+
+          if (incomingList.length === 0) {
+            throw new Error('El archivo JSON no contiene registros.');
+          }
+
+          const existing = getSavedRecords();
+          let added = 0;
+          let updated = 0;
+
+          incomingList.forEach(item => {
+            if (!item || typeof item !== 'object' || !item.datosGenerales || !item.evaluaciones) {
+              return;
+            }
+            const clean = normalizeRecordStructure(item);
+            if (!clean.id) {
+              clean.id = 'rec_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7);
+            }
+            if (!clean.updatedAt) {
+              clean.updatedAt = new Date().toISOString();
+            }
+
+            const idx = existing.findIndex(r => r.id === clean.id);
+            if (idx >= 0) {
+              existing[idx] = clean;
+              updated++;
+            } else {
+              existing.unshift(clean);
+              added++;
+            }
+          });
+
+          if (added === 0 && updated === 0) {
+            throw new Error('Ningún elemento del archivo cumplió con el formato requerido del instrumento.');
+          }
+
+          setSavedRecords(existing);
+          renderRecordsList();
+          showToast(`Importación completada: ${added} nuevos y ${updated} actualizados.`, 'success');
+        } catch (err) {
+          showToast(`Error al importar JSON: ${err.message}`, 'error');
+        } finally {
+          event.target.value = '';
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    /* ==========================================================================
+       6. GENERACIÓN DE INFORME FORMAL Y EXPORTACIONES (PDF / CSV / JSON)
+       ========================================================================== */
+    function buildReportHTML() {
+      const dg = currentState.datosGenerales;
+      const personasList = [...(dg.personas || [])];
+      if (dg.personasDetalle?.trim()) {
+        personasList.push(dg.personasDetalle.trim());
+      }
+
+      const levelLabels = {
+        basico: 'Nivel básico',
+        medio: 'Nivel medio',
+        avanzado: 'Nivel avanzado'
+      };
+
+      const levelBadgeStyles = {
+        basico: 'background-color: #FEF3C7; color: #92400E; border: 1px solid #F59E0B;',
+        medio: 'background-color: #DBEAFE; color: #1E40AF; border: 1px solid #3B82F6;',
+        avanzado: 'background-color: #D1FAE5; color: #065F46; border: 1px solid #10B981;'
+      };
+
+      let totalValorados = 0;
+      let dist = { basico: 0, medio: 0, avanzado: 0, pendiente: 0 };
+
+      INSTRUMENT_DATA.forEach(dim => {
+        dim.indicators.forEach(ind => {
+          const lvl = currentState.evaluaciones[ind.id]?.nivel;
+          if (lvl && dist[lvl] !== undefined) {
+            dist[lvl]++;
+            totalValorados++;
+          } else {
+            dist.pendiente++;
+          }
+        });
+      });
+
+      const dimensionsTablesHtml = INSTRUMENT_DATA.map(dim => {
+        const rowsHtml = dim.indicators.map(ind => {
+          const ev = currentState.evaluaciones[ind.id] || { nivel: '', evidencia: '' };
+          const lvl = ev.nivel;
+          const descriptor = lvl ? ind[lvl] : 'Sin nivel seleccionado';
+
+          const badgeHtml = lvl
+            ? `<span class="badge-print inline-block px-2.5 py-1 rounded text-xs font-bold" style="${levelBadgeStyles[lvl]}">${levelLabels[lvl]}</span>`
+            : `<span class="inline-block px-2.5 py-1 rounded text-xs font-semibold bg-slate-100 text-slate-500">Sin valorar</span>`;
+
+          return `
+            <tr class="print-break-avoid border-b border-slate-200">
+              <td class="p-3 text-xs text-slate-600 align-top w-36">${escapeHTML(ind.criterio)}</td>
+              <td class="p-3 text-xs font-semibold text-slate-900 align-top w-56">${escapeHTML(ind.nombre)}</td>
+              <td class="p-3 text-xs align-top w-32">${badgeHtml}</td>
+              <td class="p-3 text-xs text-slate-700 align-top">${escapeHTML(descriptor)}</td>
+              <td class="p-3 text-xs text-slate-700 align-top w-56">${ev.evidencia?.trim() ? escapeHTML(ev.evidencia) : '<span class="text-slate-400 italic">Sin evidencias registradas</span>'}</td>
+            </tr>
+          `;
+        }).join('');
+
+        return `
+          <div class="mt-6 space-y-2">
+            <h3 class="text-sm sm:text-base font-bold text-[#1B365D] uppercase tracking-wide border-b-2 border-[#1B365D] pb-1.5">
+              ${escapeHTML(dim.title)}
+            </h3>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse border border-slate-300">
+                <thead>
+                  <tr class="bg-slate-100 text-slate-800 text-xs font-bold">
+                    <th class="p-2.5 border border-slate-300">Criterio</th>
+                    <th class="p-2.5 border border-slate-300">Indicador</th>
+                    <th class="p-2.5 border border-slate-300">Valoración</th>
+                    <th class="p-2.5 border border-slate-300">Descripción del Nivel Seleccionado</th>
+                    <th class="p-2.5 border border-slate-300">Evidencias</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${rowsHtml}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      return `
+        <div class="space-y-6 text-slate-800">
+          <!-- Encabezado formal del documento -->
+          <div class="border-b-2 border-[#1B365D] pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <p class="text-xs font-bold uppercase tracking-widest text-slate-500">Sistema Educativo Dominicano &bull; PEC 2022-2026</p>
+              <h1 class="text-xl sm:text-2xl font-extrabold text-[#1B365D] mt-1">
+                INSTRUMENTO DE CARACTERIZACIÓN TECNOLÓGICA DEL CENTRO EDUCATIVO
+              </h1>
+            </div>
+            <div class="text-xs text-slate-600 sm:text-right shrink-0">
+              <p><strong>Fecha de aplicación:</strong> ${escapeHTML(dg.fecha || 'No especificada')}</p>
+              <p><strong>Indicadores valorados:</strong> ${totalValorados} de 21</p>
+            </div>
+          </div>
+
+          <!-- Presentación y Marco de referencia -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs leading-relaxed">
+            <div class="p-3.5 bg-slate-50 rounded-lg border border-slate-200">
+              <h2 class="font-bold text-slate-900 uppercase mb-1">Presentación</h2>
+              <p class="text-slate-700">
+                Este instrumento tiene como propósito recoger información organizada y verificable sobre las condiciones tecnológicas del centro educativo, la integración pedagógica de las TIC y la forma en que la tecnología se contempla en la gestión institucional. Los resultados permitirán reconocer fortalezas, necesidades y prioridades de mejora, sin confundir la información registrada en el PEC con la situación actual, que debe comprobarse mediante observación, entrevistas y revisión documental.
+              </p>
+            </div>
+            <div class="p-3.5 bg-slate-50 rounded-lg border border-slate-200">
+              <h2 class="font-bold text-slate-900 uppercase mb-1">Marco de referencia</h2>
+              <p class="text-slate-700">
+                El instrumento toma como punto de partida el PEC 2022-2026 de la Escuela Santa María, que plantea una educación de calidad, la formación de estudiantes críticos, la innovación mediante el trabajo cooperativo y el aprendizaje por proyectos, así como metas relacionadas con un sistema de información digital, un registro digital, una página web y espacios para laboratorios tecnológicos. El PEC también identifica la inexistencia de un laboratorio de informática como debilidad institucional.
+              </p>
+            </div>
+          </div>
+
+          <!-- Tabla de Datos Generales -->
+          <div>
+            <h2 class="text-sm font-bold text-[#1B365D] uppercase tracking-wide mb-2">Datos Generales del Centro Educativo</h2>
+            <table class="w-full text-xs border-collapse border border-slate-300">
+              <tbody>
+                <tr>
+                  <th class="bg-slate-100 text-left p-2.5 border border-slate-300 w-1/3 font-bold">Centro educativo</th>
+                  <td class="p-2.5 border border-slate-300">${escapeHTML(dg.centro || '-')}</td>
+                </tr>
+                <tr>
+                  <th class="bg-slate-100 text-left p-2.5 border border-slate-300 font-bold">Regional / Distrito</th>
+                  <td class="p-2.5 border border-slate-300">${escapeHTML(dg.regional || '-')}</td>
+                </tr>
+                <tr>
+                  <th class="bg-slate-100 text-left p-2.5 border border-slate-300 font-bold">Zona de Ubicación</th>
+                  <td class="p-2.5 border border-slate-300">${escapeHTML(dg.zona || '-')}</td>
+                </tr>
+                <tr>
+                  <th class="bg-slate-100 text-left p-2.5 border border-slate-300 font-bold">Niveles y modalidad</th>
+                  <td class="p-2.5 border border-slate-300">${escapeHTML(dg.niveles || '-')}</td>
+                </tr>
+                <tr>
+                  <th class="bg-slate-100 text-left p-2.5 border border-slate-300 font-bold">Fecha de aplicación</th>
+                  <td class="p-2.5 border border-slate-300">${escapeHTML(dg.fecha || '-')}</td>
+                </tr>
+                <tr>
+                  <th class="bg-slate-100 text-left p-2.5 border border-slate-300 font-bold">Personas que aportan la información</th>
+                  <td class="p-2.5 border border-slate-300">${personasList.length ? escapeHTML(personasList.join('; ')) : 'No especificado'}</td>
+                </tr>
+                <tr>
+                  <th class="bg-slate-100 text-left p-2.5 border border-slate-300 font-bold">Técnicas utilizadas</th>
+                  <td class="p-2.5 border border-slate-300">${dg.tecnicas?.length ? escapeHTML(dg.tecnicas.join(', ')) : 'No especificado'}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Distribución descriptiva de niveles (conteo informativo sin calificación) -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center print-break-avoid">
+            <div class="p-3 rounded-lg border border-amber-300 bg-amber-50/70">
+              <p class="text-[11px] font-bold uppercase text-amber-800">Nivel Básico</p>
+              <p class="text-xl font-extrabold text-amber-900 mt-0.5">${dist.basico}</p>
+              <p class="text-[11px] text-amber-700">indicadores</p>
+            </div>
+            <div class="p-3 rounded-lg border border-blue-300 bg-blue-50/70">
+              <p class="text-[11px] font-bold uppercase text-blue-800">Nivel Medio</p>
+              <p class="text-xl font-extrabold text-blue-900 mt-0.5">${dist.medio}</p>
+              <p class="text-[11px] text-blue-700">indicadores</p>
+            </div>
+            <div class="p-3 rounded-lg border border-emerald-300 bg-emerald-50/70">
+              <p class="text-[11px] font-bold uppercase text-emerald-800">Nivel Avanzado</p>
+              <p class="text-xl font-extrabold text-emerald-900 mt-0.5">${dist.avanzado}</p>
+              <p class="text-[11px] text-emerald-700">indicadores</p>
+            </div>
+            <div class="p-3 rounded-lg border border-slate-300 bg-slate-50">
+              <p class="text-[11px] font-bold uppercase text-slate-600">Sin Valorar</p>
+              <p class="text-xl font-extrabold text-slate-800 mt-0.5">${dist.pendiente}</p>
+              <p class="text-[11px] text-slate-500">indicadores</p>
+            </div>
+          </div>
+
+          <!-- Resultados por Dimensión -->
+          ${dimensionsTablesHtml}
+
+          <!-- Observaciones Generales -->
+          <div class="print-break-avoid pt-2">
+            <h3 class="text-sm font-bold text-[#1B365D] uppercase tracking-wide border-b-2 border-[#1B365D] pb-1.5 mb-2">
+              Observaciones generales de la caracterización
+            </h3>
+            <div class="p-4 rounded-lg border border-slate-300 bg-slate-50/60 text-xs text-slate-800 whitespace-pre-line min-h-[80px]">
+              ${currentState.observaciones?.trim() ? escapeHTML(currentState.observaciones) : 'Sin observaciones generales registradas.'}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderReportView() {
+      const html = buildReportHTML();
+      document.getElementById('report-preview-body').innerHTML = html;
+      document.getElementById('print-report-container').innerHTML = html;
+    }
+
+    function exportCurrentCSV() {
+      const dg = currentState.datosGenerales;
+      const levelLabels = {
+        basico: 'Nivel básico',
+        medio: 'Nivel medio',
+        avanzado: 'Nivel avanzado'
+      };
+
+      const rows = [
+        [
+          'Centro Educativo',
+          'Regional / Distrito',
+          'Zona de Ubicación',
+          'Niveles y Modalidad',
+          'Fecha de Aplicación',
+          'Personas Informantes',
+          'Técnicas Utilizadas',
+          'Dimensión',
+          'Criterio',
+          'Código Indicador',
+          'Indicador',
+          'Nivel Valorado',
+          'Descripción del Nivel',
+          'Evidencias',
+          'Observaciones Generales'
+        ]
+      ];
+
+      const personasStr = [...(dg.personas || []), dg.personasDetalle?.trim() || '']
+        .filter(Boolean)
+        .join('; ');
+      const tecnicasStr = (dg.tecnicas || []).join('; ');
+
+      INSTRUMENT_DATA.forEach(dim => {
+        dim.indicators.forEach(ind => {
+          const ev = currentState.evaluaciones[ind.id] || { nivel: '', evidencia: '' };
+          const lvlText = ev.nivel ? levelLabels[ev.nivel] : 'Sin valorar';
+          const descText = ev.nivel ? ind[ev.nivel] : '';
+
+          rows.push([
+            dg.centro || '',
+            dg.regional || '',
+            dg.zona || '',
+            dg.niveles || '',
+            dg.fecha || '',
+            personasStr,
+            tecnicasStr,
+            dim.title,
+            ind.criterio,
+            ind.id,
+            ind.nombre,
+            lvlText,
+            descText,
+            ev.evidencia || '',
+            currentState.observaciones || ''
+          ]);
+        });
+      });
+
+      const csvContent = '\uFEFF' + rows.map(row =>
+        row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',')
+      ).join('\r\n');
+
+      const dateSlug = dg.fecha || getTodayISO();
+      downloadFile(
+        csvContent,
+        `Caracterizacion_TIC_SantaMaria_${dateSlug}.csv`,
+        'text/csv;charset=utf-8;'
+      );
+      showToast('Archivo CSV descargado correctamente.', 'success');
+    }
+
+    function exportCurrentJSON() {
+      const dg = currentState.datosGenerales;
+      const dateSlug = dg.fecha || getTodayISO();
+
+      const payload = {
+        instrumento: 'Instrumento de Caracterización Tecnológica del Centro Educativo',
+        marcoReferencia: 'PEC 2022-2026 de la Escuela Santa María',
+        exportadoEn: new Date().toISOString(),
+        ...currentState
+      };
+
+      downloadFile(
+        JSON.stringify(payload, null, 2),
+        `Caracterizacion_TIC_SantaMaria_${dateSlug}.json`,
+        'application/json'
+      );
+      showToast('Archivo JSON de la caracterización descargado.', 'success');
+    }
+
+    function downloadFile(content, filename, mimeType) {
+      const blob = new Blob([content], { type: mimeType });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    /* ==========================================================================
+       7. NAVEGACIÓN ENTRE VISTAS, MENÚ MÓVIL Y UTILIDADES UI
+       ========================================================================== */
+    function switchView(viewName) {
+      const views = ['form', 'report', 'records'];
+      views.forEach(v => {
+        const el = document.getElementById(`view-${v}`);
+        const tab = document.getElementById(`tab-${v}`);
+        if (!el || !tab) return;
+
+        if (v === viewName) {
+          el.classList.remove('hidden');
+          tab.setAttribute('aria-selected', 'true');
+          tab.className = 'flex-1 min-w-[140px] flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold bg-[#1B365D] text-white shadow-sm transition';
+        } else {
+          el.classList.add('hidden');
+          tab.setAttribute('aria-selected', 'false');
+          tab.className = 'flex-1 min-w-[140px] flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold text-slate-600 hover:bg-slate-100 transition';
+        }
+      });
+
+      if (viewName === 'report') {
+        renderReportView();
+      } else if (viewName === 'records') {
+        renderRecordsList();
+      }
+
+      toggleSidebar(false);
+    }
+
+    function handleNavClick(event, targetId) {
+      event.preventDefault();
+      switchView('form');
+      toggleSidebar(false);
+      setTimeout(() => {
+        const target = document.getElementById(targetId);
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 60);
+    }
+
+    function toggleSidebar(forceOpen) {
+      const sidebar = document.getElementById('sidebar-nav');
+      const backdrop = document.getElementById('sidebar-backdrop');
+      const isOpen = !sidebar.classList.contains('-translate-x-full');
+      const nextState = typeof forceOpen === 'boolean' ? forceOpen : !isOpen;
+
+      if (nextState) {
+        sidebar.classList.remove('-translate-x-full');
+        backdrop.classList.remove('hidden');
+      } else {
+        sidebar.classList.add('-translate-x-full');
+        backdrop.classList.add('hidden');
+      }
+    }
+
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+
+      const styles = {
+        success: 'bg-emerald-900 text-white border-emerald-700',
+        error: 'bg-red-900 text-white border-red-700',
+        info: 'bg-slate-900 text-white border-slate-700'
+      };
+      const icons = {
+        success: 'fa-circle-check text-emerald-400',
+        error: 'fa-circle-exclamation text-red-400',
+        info: 'fa-circle-info text-blue-400'
+      };
+
+      toast.className = `pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-xl border shadow-lg text-xs sm:text-sm font-medium transition-all duration-300 ${styles[type] || styles.info}`;
+      toast.innerHTML = `
+        <i class="fa-solid ${icons[type] || icons.info} text-base shrink-0"></i>
+        <span class="flex-1">${escapeHTML(message)}</span>
+      `;
+
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(8px)';
+        setTimeout(() => toast.remove(), 300);
+      }, 3600);
+    }
+
+    function openConfirmModal(title, message, onConfirm) {
+      const modal = document.getElementById('confirm-modal');
+      document.getElementById('confirm-modal-title').textContent = title;
+      document.getElementById('confirm-modal-message').textContent = message;
+
+      const cancelBtn = document.getElementById('confirm-modal-cancel');
+      const okBtn = document.getElementById('confirm-modal-ok');
+
+      const close = () => {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      };
+
+      cancelBtn.onclick = close;
+      okBtn.onclick = () => {
+        close();
+        onConfirm();
+      };
+
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function escapeHTML(str) {
+      return String(str ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    /* ==========================================================================
+       8. INICIALIZACIÓN DE LA APLICACIÓN
+       ========================================================================== */
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('mobile-menu-btn').addEventListener('click', () => toggleSidebar());
+
+      renderDimensions();
+      bindGeneralFormListeners();
+
+      // Recuperar borrador en progreso si existe
+      try {
+        const draftRaw = localStorage.getItem(DRAFT_KEY);
+        if (draftRaw) {
+          const parsedDraft = JSON.parse(draftRaw);
+          if (parsedDraft && parsedDraft.state) {
+            currentRecordId = parsedDraft.currentRecordId || null;
+            currentState = normalizeRecordStructure(parsedDraft.state);
+          }
+        }
+      } catch (e) {
+        console.warn('Error recuperando borrador previo:', e);
+      }
+
+      populateFormFromState();
+      updateRecordsCounters();
+      renderReportView();
+
+      // Actualizar vista de impresión antes de invocar window.print() desde atajos del navegador
+      window.addEventListener('beforeprint', () => {
+        renderReportView();
+      });
+    });
+  </script>
+</body>
+</html>
